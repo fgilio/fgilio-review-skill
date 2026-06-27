@@ -1,0 +1,9 @@
+{
+  "name": "fgilio-review",
+  "description": "Audit code through Franco's coding standards and polish simplification panel in one pass. Modes: report (default), address, comment (inline PR comments).",
+  "author": {
+    "name": "Franco Gilio"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/fgilio/fgilio-review-skill"
+}
