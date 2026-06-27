@@ -1,6 +1,6 @@
 # fgilio-review skill
 
-A code-review skill for Claude Code that audits a scope through **both** of Franco's other skills at once: the [`coding`](https://github.com/fgilio/coding-skill) style standards and the [`polish`](https://github.com/fgilio/polish-skill) simplification panel (Taylor Otwell, DHH, Adam Wathan, Caleb Porzio). It runs both lenses over the same scope and synthesizes their output into one deduplicated, prioritized list.
+A code-review skill for Claude Code that audits a scope through **both** of Franco's other skills at once: the [`coding`](https://github.com/fgilio/coding-skill) skill and the [`polish`](https://github.com/fgilio/polish-skill) skill. It runs both lenses over the same scope and synthesizes their output into one deduplicated, prioritized list.
 
 Everything lives in [SKILL.md](skills/fgilio-review/SKILL.md).
 
@@ -9,8 +9,8 @@ Everything lives in [SKILL.md](skills/fgilio-review/SKILL.md).
 One skill, three modes — selected by the first argument:
 
 - **report (default)** — `/fgilio-review` presents the merged findings. Writes no code.
-- **address** — `/fgilio-review address` applies the fixes: low-risk changes directly, risky ones only after confirming via a question. In a non-interactive routine it posts the risky ones as PR comments instead of blocking.
-- **comment** — `/fgilio-review comment` posts the findings as inline comments on the pull request, the way the built-in `/code-review --comment` does.
+- **address** — `/fgilio-review address` applies the fixes: low-risk changes directly, risky ones only after confirming with you. In a non-interactive routine it posts the risky ones as PR comments instead of blocking.
+- **comment** — `/fgilio-review comment` posts the findings as review comments on the pull request, inline at the relevant lines where possible.
 
 Optionally scope the review:
 
@@ -22,7 +22,7 @@ Optionally scope the review:
 
 ## Requirements
 
-The `coding` and `polish` skills must be available in the session — this skill orchestrates them. Both ship from the same [fgilio marketplace](https://github.com/fgilio/claude-plugins). `comment` mode uses `gh` and, when present, the inline-comment MCP tool.
+The `coding` and `polish` skills must be available in the session — this skill orchestrates them. Both ship from the same [fgilio marketplace](https://github.com/fgilio/claude-plugins). `comment` mode needs whatever GitHub tooling the session provides for posting PR review comments.
 
 ## Installation
 
