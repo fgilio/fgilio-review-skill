@@ -15,9 +15,9 @@ One skill, three modes — selected by the first argument:
 Optionally scope the review:
 
 ```
-/fgilio-review --scope=the current changes      # default
-/fgilio-review address --scope=the current branch
-/fgilio-review comment 65                        # target a specific PR
+/fgilio-review --scope=changes      # default
+/fgilio-review address --scope=branch
+/fgilio-review comment 65           # target a specific PR
 ```
 
 ## Requirements
