@@ -46,6 +46,6 @@ If there is no interactive user to confirm with — a scheduled routine, say —
 Post the merged findings as review comments on the target PR:
 
 1. Anchor each finding to its file and line in the PR diff.
-2. Post one comment per finding, inline at the relevant line where possible. Include a committable suggestion only when it fixes the finding entirely; otherwise describe the fix in prose.
-3. If inline comments aren't possible, consolidate everything into a single summary comment on the PR.
-4. One comment per unique finding — never duplicate. If there are no findings, post a single brief "no issues found" summary.
+2. Batch everything into a single PR review: start a pending review, add one inline comment per finding at the relevant line, then submit the review once with a brief summary. One notification for the whole audit, not one per finding. Include a committable suggestion only when it fixes the finding entirely; otherwise describe the fix in prose.
+3. If the session's tooling can't build a pending review, fall back to individual inline comments. If inline comments aren't possible at all, consolidate everything into a single summary comment on the PR.
+4. One comment per unique finding — never duplicate. If there are no findings, submit a single brief "no issues found" review.
