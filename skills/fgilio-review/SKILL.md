@@ -1,10 +1,8 @@
 ---
 name: fgilio-review
 description: >
-  Audit code through Franco's two lenses at once — the `coding` skill and the
-  `polish` skill — run over the same scope and merged into one prioritized list.
-  Three modes — report (default), address (apply the fixes), comment (post review
-  comments on a PR).
+  Audit code through Franco's two review lenses (the `coding` and `polish`
+  skills) merged into one prioritized list.
   Use when: reviewing the current changes, a branch, or a PR in one pass.
 argument-hint: "[report|address|comment] [--scope=changes|branch|project] [<PR number or URL>]"
 user-invocable: true

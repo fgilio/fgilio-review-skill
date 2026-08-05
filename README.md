@@ -10,7 +10,7 @@ One skill, three modes — selected by the first argument:
 
 - **report (default)** — `/fgilio-review` presents the merged findings. Writes no code.
 - **address** — `/fgilio-review address` applies the fixes: low-risk changes directly, risky ones only after confirming with you. In a non-interactive routine it posts the risky ones as PR comments instead of blocking.
-- **comment** — `/fgilio-review comment` posts the findings as review comments on the pull request, inline at the relevant lines where possible.
+- **comment** — `/fgilio-review comment` posts the findings as a single PR review, with one inline comment per finding at the relevant lines where possible.
 
 Optionally scope the review:
 
@@ -19,6 +19,8 @@ Optionally scope the review:
 /fgilio-review address --scope=branch
 /fgilio-review comment 65           # target a specific PR
 ```
+
+The commands above assume a skills-directory install. Installed as a plugin, skills are namespaced as `/<plugin>:<skill>`, so the command becomes `/fgilio-review:fgilio-review`.
 
 ## Requirements
 

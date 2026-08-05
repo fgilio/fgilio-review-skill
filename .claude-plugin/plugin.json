@@ -1,6 +1,6 @@
 {
   "name": "fgilio-review",
-  "description": "Audit code through Franco's coding standards and polish simplification panel in one pass. Modes: report (default), address, comment (inline PR comments).",
+  "description": "Audit code through Franco's two review lenses (the coding and polish skills) merged into one prioritized list.",
   "author": {
     "name": "Franco Gilio"
   },
