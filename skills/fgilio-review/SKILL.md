@@ -41,7 +41,7 @@ If there is no interactive user to confirm with — a scheduled routine, say —
 
 ## comment
 
-Post the merged findings as review comments on the target PR:
+Post the merged findings as review comments on the target PR. Write everything you post — inline comments, suggestions' prose, and the review summary — in the language of the PR's description, not necessarily English: read the description, detect its language (fall back to the PR title if the description is empty), and match it.
 
 1. Anchor each finding to its file and line in the PR diff.
 2. Batch everything into a single PR review: start a pending review, add one inline comment per finding at the relevant line, then submit the review once with a brief summary. One notification for the whole audit, not one per finding. Include a committable suggestion only when it fixes the finding entirely; otherwise describe the fix in prose.
