@@ -1,6 +1,6 @@
 # fgilio-review skill
 
-A code-review skill for Claude Code that audits a scope through **both** of Franco's other skills at once: the [`coding`](https://github.com/fgilio/coding-skill) skill and the [`polish`](https://github.com/fgilio/polish-skill) skill. It runs both lenses over the same scope and synthesizes their output into one deduplicated, prioritized list.
+A code-review skill for Claude Code that audits a scope through **both** of Franco's other skills at once: the [`coding`](https://github.com/fgilio/coding-skill) skill and the [`polish`](https://github.com/fgilio/polish-skill) skill. It checks the scope against the `coding` rules and runs the `polish` panel over it in parallel, verifies each finding against the cited lines, and merges the survivors into one deduplicated, prioritized list.
 
 Everything lives in [SKILL.md](skills/fgilio-review/SKILL.md).
 
@@ -9,7 +9,7 @@ Everything lives in [SKILL.md](skills/fgilio-review/SKILL.md).
 One skill, three modes, selected by the first argument:
 
 - **report (default)**: `/fgilio-review` presents the merged findings. Writes no code.
-- **address**: `/fgilio-review address` applies the fixes: low-risk changes directly, risky ones only after confirming with you. In a non-interactive routine it posts the risky ones as PR comments instead of blocking.
+- **address**: `/fgilio-review address` applies the fixes: confirmed structural ones first, then mechanical ones directly, then runs the repo's checks and reverts any fix that breaks them. In a non-interactive routine it posts the findings that need confirmation as PR comments instead of blocking.
 - **comment**: `/fgilio-review comment` posts the findings as a single PR review, with one inline comment per finding at the relevant lines where possible.
 
 Optionally scope the review (without `--scope` it is inferred from context: uncommitted changes, the branch, or the whole project when the request covers it or there is no diff):

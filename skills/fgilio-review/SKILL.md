@@ -79,9 +79,14 @@ Present the merged list. Write no code. End with the prioritized findings.
 
 ## address
 
-Apply the fixes, gated on class and behavior. Apply `mechanical` findings with behavior `unchanged` directly. Confirm every other finding with the user before applying it, and skip anything declined. A PR title or description is public, so a fix to it always needs confirmation.
+Apply the fixes in this order, gated on class and behavior:
 
-If there is no interactive user to confirm with (a scheduled routine, say), do not block and do not silently apply risky changes. Apply the mechanical fixes and leave each other finding as a comment on the current branch's PR (see `comment`), so nothing is lost.
+1. Confirm with the user each finding that is not `mechanical` with behavior `unchanged`. A PR title or description is public, so a fix to it always needs confirmation too. Apply the confirmed fixes and skip anything declined.
+2. Drop findings whose lines step 1 deleted, and re-anchor findings whose lines moved.
+3. Apply the `mechanical` findings with behavior `unchanged` directly.
+4. Run the repo's checks once (tests, linters, hooks). If a fix breaks them, revert that fix and report it.
+
+If there is no interactive user to confirm with (a scheduled routine, say), do not block and do not silently apply risky changes. Skip step 1, run steps 3 and 4, and leave each finding that needed confirmation as a comment on the current branch's PR (see `comment`), so nothing is lost.
 
 ## comment
 
