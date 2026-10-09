@@ -11,7 +11,7 @@ disable-model-invocation: true
 
 # fgilio-review
 
-One audit, two lenses. Run the `coding` skill and the `polish` skill over the same scope, merge their findings into a single prioritized list, then act on it according to the chosen mode.
+One audit, two lenses. Route the scope, review it in parallel against the `coding` rules and through the `polish` panel, merge the findings into a single prioritized list, then act on it according to the chosen mode.
 
 ## Parsing arguments
 
@@ -40,7 +40,12 @@ Add the count of routed files by type to the opening line, for example: `report 
 
 ## The audit (all modes)
 
-Run both skills over the routed files and collect their findings. Invoke each with the Skill tool when it appears in the available-skills list. A sub-skill marked user-invocable only will not, so locate its SKILL.md instead (installed as a plugin or symlinked into the skills directory) and follow its instructions over the same scope yourself. The two lenses yield findings differently: `polish` runs its own review and returns them, while `coding` is a style guide that returns nothing, so review the scope against its rules yourself and record each violation as a finding. Each skill owns its own review criteria. fgilio-review's job is to run both against the same scope and reconcile the output, not to second-guess either one. Have them return findings only. fgilio-review owns what happens next, so neither sub-review should modify code on its own.
+Run two reviews in parallel over the routed files. Do not review the files in the main context.
+
+- **Rules**: a subagent loads the `coding` skill and checks each routed file against it as a checklist, one finding per violation. On a large scope, shard it into several subagents, one per slice of the tree.
+- **Judgment**: the `polish` skill runs its panel over the same files. Its comment findings can overlap with the checklist. The merge removes the duplicates.
+
+Invoke a skill with the Skill tool when it appears in the available-skills list. A skill marked user-invocable only will not, so locate its SKILL.md instead (installed as a plugin or symlinked into the skills directory), follow it, and give its path to any subagent that needs it. Each skill owns its own review criteria. fgilio-review's job is to run both against the same files and reconcile the output, not to second-guess either one. Tell the rules subagent and each `polish` persona to return findings only, in the format below. fgilio-review owns what happens next, so neither review should modify code on its own.
 
 Every finding uses one format, whichever lens produced it:
 
