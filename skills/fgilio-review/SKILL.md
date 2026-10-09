@@ -41,14 +41,14 @@ Add the count of routed files by type to the opening line, for example: `report 
 
 ## The audit (all modes)
 
-Run two reviews in parallel over the routed files. Do not review the files in the main context.
+Run two reviews in parallel over the routed files. The main context spawns the subagents and does not read the routed files itself.
 
 - **Rules**: a subagent loads the `coding` skill and checks each routed file against it as a checklist, one finding per violation. On a large scope, shard it into several subagents, one per slice of the tree.
-- **Judgment**: the `polish` skill runs its panel over the same files. Its comment findings can overlap with the checklist. The merge removes the duplicates.
+- **Judgment**: the `polish` panel reviews the same files. Run only its panel. Its parsing, opening line, synthesis, and report steps do not apply, because fgilio-review owns the scope, the opening line, the merge, and the output. Its comment findings can overlap with the checklist. The merge removes the duplicates.
 
 The rules subagent also checks a routed PR title and description against the `coding` skill's PR Descriptions section. It reports a finding only when they mislead a reviewer: they state the change wrongly, do not say why, describe a design that did not ship, or take much more than a minute to read. Wording and style are not findings.
 
-Load `coding` and `polish` from the same install as this skill: `coding:coding` and `polish:polish` for a plugin install, or the entries next to this skill's directory for a skills-directory install. A same-named copy under another namespace (such as `anthropic-skills:coding`) can be an older version, so never load it. Invoke a skill with the Skill tool when it appears in the available-skills list. A skill marked user-invocable only will not, so locate its SKILL.md instead, follow it, and give its path to any subagent that needs it. Each skill owns its own review criteria. fgilio-review's job is to run both against the same files and reconcile the output, not to second-guess either one. Tell the rules subagent and each `polish` persona to return findings only, in the format below. fgilio-review owns what happens next, so neither review should modify code on its own.
+Load `coding` and `polish` from the same install as this skill: `coding:coding` and `polish:polish` for a plugin install, or the entries next to this skill's directory for a skills-directory install. A same-named copy under another namespace (such as `anthropic-skills:coding`) can be an older version, so never load it. Invoke a skill with the Skill tool when it appears in the available-skills list. A skill marked user-invocable only will not, so locate its SKILL.md instead, follow it, and give its path to any subagent that needs it. Each skill owns its own review criteria. fgilio-review's job is to run both against the same files and reconcile the output, not to second-guess either one. Tell the rules subagent and each `polish` persona to return findings only, in the format below. Personas also return their no-change verdicts on traced flows, so the merge can show where the lenses disagree. fgilio-review owns what happens next, so neither review should modify code on its own.
 
 Every finding uses one format, whichever lens produced it:
 
@@ -56,6 +56,7 @@ Every finding uses one format, whichever lens produced it:
 - **Source**: the `coding` section or the `polish` persona behind it.
 - **Class**: `defect` (wrong now: a bug or a broken contract), `design` (structure, naming, or ownership, possibly across files), or `mechanical` (local, same behavior, one clear fix: cut a comment, use the framework idiom, split a guard).
 - **Behavior**: `unchanged` or `changes`.
+- **Contracts**: when the fix touches an interface, the callers and external contracts it must keep working. Omit it otherwise.
 - **Problem**: one sentence on what breaks or costs clarity.
 - **Fix**: one sentence, or a committable suggestion.
 
