@@ -11,7 +11,7 @@ disable-model-invocation: true
 
 # fgilio-review
 
-One audit, two lenses. Route the scope, review it in parallel against the `coding` rules and through the `polish` panel, merge the findings into a single prioritized list, then act on it according to the chosen mode.
+One audit, two lenses. Route the scope, review it in parallel against the `coding` rules and through the `polish` panel, verify each finding, merge the survivors into a single prioritized list, then act on it according to the chosen mode.
 
 ## Parsing arguments
 
@@ -57,6 +57,10 @@ Every finding uses one format, whichever lens produced it:
 - **Fix**: one sentence, or a committable suggestion.
 
 Bug hunting belongs to `/code-review`. A defect either lens finds along the way still goes in the list.
+
+## Verify
+
+In every mode, give the findings to a fresh subagent before the merge. For each finding, it reads the cited lines and the cited rule, then returns keep or drop with a one-line reason. Split a long list across several subagents. Only kept findings reach the merge. Report how many were dropped alongside the merged list.
 
 ## Merge
 
