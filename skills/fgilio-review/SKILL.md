@@ -35,6 +35,7 @@ List the files in scope, then route them:
 
 - Skip lockfiles and generated, vendored, or binary files.
 - The `coding` skill's `laravel.md` applies only to PHP files and files that are obviously Laravel.
+- Add the PR title and description when the branch has an open PR.
 
 Add the count of routed files by type to the opening line, for example: `report · branch (3 commits ahead of main) · 14 files: 9 PHP, 3 Blade, 1 test, 1 CLAUDE.md`.
 
@@ -45,11 +46,13 @@ Run two reviews in parallel over the routed files. Do not review the files in th
 - **Rules**: a subagent loads the `coding` skill and checks each routed file against it as a checklist, one finding per violation. On a large scope, shard it into several subagents, one per slice of the tree.
 - **Judgment**: the `polish` skill runs its panel over the same files. Its comment findings can overlap with the checklist. The merge removes the duplicates.
 
+The rules subagent also checks a routed PR title and description against the `coding` skill's PR Descriptions section. It reports a finding only when they mislead a reviewer: they state the change wrongly, do not say why, describe a design that did not ship, or take much more than a minute to read. Wording and style are not findings.
+
 Invoke a skill with the Skill tool when it appears in the available-skills list. A skill marked user-invocable only will not, so locate its SKILL.md instead (installed as a plugin or symlinked into the skills directory), follow it, and give its path to any subagent that needs it. Each skill owns its own review criteria. fgilio-review's job is to run both against the same files and reconcile the output, not to second-guess either one. Tell the rules subagent and each `polish` persona to return findings only, in the format below. fgilio-review owns what happens next, so neither review should modify code on its own.
 
 Every finding uses one format, whichever lens produced it:
 
-- **Location**: `file:line` or a line range.
+- **Location**: `file:line`, a line range, or `PR description`.
 - **Source**: the `coding` section or the `polish` persona behind it.
 - **Class**: `defect` (wrong now: a bug or a broken contract), `design` (structure, naming, or ownership, possibly across files), or `mechanical` (local, same behavior, one clear fix: cut a comment, use the framework idiom, split a guard).
 - **Behavior**: `unchanged` or `changes`.
@@ -76,7 +79,7 @@ Present the merged list. Write no code. End with the prioritized findings.
 
 ## address
 
-Apply the fixes, gated on class and behavior. Apply `mechanical` findings with behavior `unchanged` directly. Confirm every other finding with the user before applying it, and skip anything declined.
+Apply the fixes, gated on class and behavior. Apply `mechanical` findings with behavior `unchanged` directly. Confirm every other finding with the user before applying it, and skip anything declined. A PR title or description is public, so a fix to it always needs confirmation.
 
 If there is no interactive user to confirm with (a scheduled routine, say), do not block and do not silently apply risky changes. Apply the mechanical fixes and leave each other finding as a comment on the current branch's PR (see `comment`), so nothing is lost.
 
@@ -84,7 +87,7 @@ If there is no interactive user to confirm with (a scheduled routine, say), do n
 
 Post the merged findings as review comments on the target PR. Write everything you post (inline comments, suggestions' prose, and the review summary) in the language of the PR's description, not necessarily English: read the description, detect its language (fall back to the PR title if the description is empty), and match it.
 
-1. Anchor each finding to its file and line in the PR diff.
+1. Anchor each finding to its file and line in the PR diff. A PR description finding has no line, so it goes in the review summary.
 2. Batch everything into a single PR review: start a pending review, add one inline comment per finding at the relevant line, then submit the review once with a brief summary. One notification for the whole audit, not one per finding. Include a committable suggestion only when it fixes the finding entirely. Otherwise describe the fix in prose.
 3. If the session's tooling can't build a pending review, fall back to individual inline comments. If inline comments aren't possible at all, consolidate everything into a single summary comment on the PR.
 4. One comment per unique finding, never a duplicate. If there are no findings, submit a single brief "no issues found" review.
