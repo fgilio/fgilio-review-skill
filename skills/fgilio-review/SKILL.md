@@ -27,8 +27,6 @@ One audit, two lenses. Route the scope, review it in parallel against the `codin
 
 3. **Target PR** (comment mode): a PR number or URL if given, otherwise the open PR for the current branch.
 
-State the resolved mode and scope in one line before you begin, with the reason for an inferred scope, so the choice is visible and correctable.
-
 ## Routing
 
 List the files in scope, then route them:
@@ -37,7 +35,7 @@ List the files in scope, then route them:
 - The `coding` skill's `laravel.md` applies only to PHP files and files that are obviously Laravel.
 - Add the PR title and description when the branch has an open PR.
 
-Add the count of routed files by type to the opening line, for example: `report · branch (3 commits ahead of main) · 14 files: 9 PHP, 3 Blade, 1 test, 1 CLAUDE.md`.
+Then state the opening line, before the review starts, so the plan is visible and correctable: the mode, the scope (with the reason when it was inferred), and the routed files counted by language, with tests and agent-instruction files counted on their own. For example: `report · branch (3 commits ahead of main) · 14 files: 9 PHP, 3 Blade, 1 test, 1 CLAUDE.md`.
 
 ## The audit (all modes)
 
