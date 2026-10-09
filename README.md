@@ -1,6 +1,6 @@
 # fgilio-review skill
 
-A code-review skill for Claude Code that audits a scope through **both** of Franco's other skills at once: the [`coding`](https://github.com/fgilio/coding-skill) skill and the [`polish`](https://github.com/fgilio/polish-skill) skill. It checks the scope against the `coding` rules and runs the `polish` panel over it in parallel, verifies each finding against the cited lines, and merges the survivors into one deduplicated, prioritized list.
+A code-review skill for Claude Code that audits a scope through **both** of Franco's other skills at once: the [`coding`](https://github.com/fgilio/coding-skill) skill and the [`polish`](https://github.com/fgilio/polish-skill) skill. It checks the scope against the `coding` rules and runs the `polish` panel over it in parallel, merges the findings into one deduplicated, prioritized list, and verifies each one against the cited lines.
 
 Everything lives in [SKILL.md](skills/fgilio-review/SKILL.md).
 

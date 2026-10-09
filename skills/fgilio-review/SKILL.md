@@ -11,7 +11,7 @@ disable-model-invocation: true
 
 # fgilio-review
 
-One audit, two lenses. Route the scope, review it in parallel against the `coding` rules and through the `polish` panel, verify each finding, merge the survivors into a single prioritized list, then act on it according to the chosen mode.
+One audit, two lenses. Route the scope, review it in parallel against the `coding` rules and through the `polish` panel, merge the findings into a single prioritized list, verify each one, then act on it according to the chosen mode.
 
 ## Parsing arguments
 
@@ -62,17 +62,19 @@ Every finding uses one format, whichever lens produced it:
 
 Bug hunting belongs to `/code-review`. A defect either lens finds along the way still goes in the list.
 
-## Verify
-
-In every mode, give the findings to a fresh subagent before the merge. For each finding, it reads the cited lines and the cited rule, then returns keep or drop with a one-line reason. Split a long list across several subagents. Only kept findings reach the merge. Report how many were dropped alongside the merged list.
-
 ## Merge
 
 Merge the findings into one list:
 
-- **Duplicates**: findings on the same file, with overlapping lines and the same problem, become one finding that lists both sources.
-- **Order**: `defect`, then `design`, then `mechanical`. Within a class, the fix that removes the most code or concepts comes first.
-- **Disagreements**: where the two lenses disagree, say so and which way to lean.
+- **Duplicates**: findings on the same file, with overlapping lines and the same problem, become one finding that lists every source.
+- **Class**: when merged sources give different classes, keep the one that comes first in the order below.
+- **Dependencies**: when one fix makes another unnecessary or possible, say so on both findings.
+- **Order**: `defect`, then `design`, then `mechanical`. Within a class, an enabling fix comes before the fixes it unlocks, then the fix that removes the most code or concepts comes first.
+- **Disagreements**: where the lenses propose different fixes, or a persona's no-change verdict covers lines another source flagged, say so and which way to lean. No-change verdicts stay out of the list.
+
+## Verify
+
+In every mode, give the merged list to a fresh subagent. For each finding, it reads the cited lines and the rule or persona lens behind it, then returns keep or drop with a one-line reason. It drops a finding when the lines do not show the problem, or when the fix would not solve it. A finding that depends on another one stays. Above 20 findings, split the list by file across several subagents. Report how many were dropped alongside the final list.
 
 ## report (default)
 
