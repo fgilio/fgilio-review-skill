@@ -24,6 +24,7 @@ One audit, two lenses. Run the `coding` skill and the `polish` skill over the sa
    - `project` when the request is about the codebase as a whole, or when there is no diff to review.
 
    Ask only when two scopes fit equally well.
+
 3. **Target PR** (comment mode): a PR number or URL if given, otherwise the open PR for the current branch.
 
 State the resolved mode and scope in one line before you begin, with the reason for an inferred scope, so the choice is visible and correctable.
@@ -41,7 +42,24 @@ Add the count of routed files by type to the opening line, for example: `report 
 
 Run both skills over the routed files and collect their findings. Invoke each with the Skill tool when it appears in the available-skills list. A sub-skill marked user-invocable only will not, so locate its SKILL.md instead (installed as a plugin or symlinked into the skills directory) and follow its instructions over the same scope yourself. The two lenses yield findings differently: `polish` runs its own review and returns them, while `coding` is a style guide that returns nothing, so review the scope against its rules yourself and record each violation as a finding. Each skill owns its own review criteria. fgilio-review's job is to run both against the same scope and reconcile the output, not to second-guess either one. Have them return findings only. fgilio-review owns what happens next, so neither sub-review should modify code on its own.
 
-Merge the two sets into one deduplicated, prioritized list. Each finding names the file or symbol, the problem, and the concrete fix. Lead with the highest-leverage items. Where the two lenses disagree, say so and which way to lean.
+Every finding uses one format, whichever lens produced it:
+
+- **Location**: `file:line` or a line range.
+- **Source**: the `coding` section or the `polish` persona behind it.
+- **Class**: `defect` (wrong now: a bug or a broken contract), `design` (structure, naming, or ownership, possibly across files), or `mechanical` (local, same behavior, one clear fix: cut a comment, use the framework idiom, split a guard).
+- **Behavior**: `unchanged` or `changes`.
+- **Problem**: one sentence on what breaks or costs clarity.
+- **Fix**: one sentence, or a committable suggestion.
+
+Bug hunting belongs to `/code-review`. A defect either lens finds along the way still goes in the list.
+
+## Merge
+
+Merge the findings into one list:
+
+- **Duplicates**: findings on the same file, with overlapping lines and the same problem, become one finding that lists both sources.
+- **Order**: `defect`, then `design`, then `mechanical`. Within a class, the fix that removes the most code or concepts comes first.
+- **Disagreements**: where the two lenses disagree, say so and which way to lean.
 
 ## report (default)
 
@@ -49,9 +67,9 @@ Present the merged list. Write no code. End with the prioritized findings.
 
 ## address
 
-Apply the fixes, but gate on risk. Apply low-risk, local, mechanical changes directly. For structural or ambiguous changes, confirm with the user before applying, and skip anything declined.
+Apply the fixes, gated on class and behavior. Apply `mechanical` findings with behavior `unchanged` directly. Confirm every other finding with the user before applying it, and skip anything declined.
 
-If there is no interactive user to confirm with (a scheduled routine, say), do not block and do not silently apply risky changes. Apply the safe fixes and leave each risky finding as a comment on the current branch's PR (see `comment`), so nothing is lost.
+If there is no interactive user to confirm with (a scheduled routine, say), do not block and do not silently apply risky changes. Apply the mechanical fixes and leave each other finding as a comment on the current branch's PR (see `comment`), so nothing is lost.
 
 ## comment
 
