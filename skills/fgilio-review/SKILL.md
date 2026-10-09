@@ -18,10 +18,15 @@ One audit, two lenses. Run the `coding` skill and the `polish` skill over the sa
 `$ARGUMENTS` carries the invocation. Resolve three things:
 
 1. **Mode**: the first word that names a mode. `report` (default) presents findings and changes nothing. `address` implements the fixes. `comment` posts findings as review comments on a pull request. Accept synonyms: `fix` → address, `pr` / `comment-pr` → comment. A word that names no mode never selects one, so the default stands.
-2. **Scope**: the value of `--scope=…` if present: `changes` (the uncommitted diff), `branch` (the current branch's diff against its base), or `project` (the entire codebase). Accept the spelled-out forms too. Otherwise infer the most useful scope from context: `changes` if the repo has uncommitted work, else `branch`, else `project`. Ask only if genuinely ambiguous.
+2. **Scope**: the value of `--scope=…` if present: `changes` (the uncommitted diff), `branch` (the current branch's diff against its base), or `project` (the entire codebase). Accept the spelled-out forms too. Otherwise infer the scope from context:
+   - `changes` when the repo has uncommitted work.
+   - `branch` when the current branch has commits its base lacks.
+   - `project` when the request is about the codebase as a whole, or when there is no diff to review.
+
+   Ask only when two scopes fit equally well.
 3. **Target PR** (comment mode): a PR number or URL if given, otherwise the open PR for the current branch.
 
-State the resolved mode and scope in one line before you begin, so the choice is visible and correctable.
+State the resolved mode and scope in one line before you begin, with the reason for an inferred scope, so the choice is visible and correctable.
 
 ## The audit (all modes)
 

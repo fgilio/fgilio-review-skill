@@ -12,7 +12,7 @@ One skill, three modes, selected by the first argument:
 - **address**: `/fgilio-review address` applies the fixes: low-risk changes directly, risky ones only after confirming with you. In a non-interactive routine it posts the risky ones as PR comments instead of blocking.
 - **comment**: `/fgilio-review comment` posts the findings as a single PR review, with one inline comment per finding at the relevant lines where possible.
 
-Optionally scope the review (without `--scope` the most useful one is inferred: uncommitted changes, else the branch, else the project):
+Optionally scope the review (without `--scope` it is inferred from context: uncommitted changes, the branch, or the whole project when the request covers it or there is no diff):
 
 ```
 /fgilio-review --scope=changes
