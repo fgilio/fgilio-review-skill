@@ -28,9 +28,18 @@ One audit, two lenses. Run the `coding` skill and the `polish` skill over the sa
 
 State the resolved mode and scope in one line before you begin, with the reason for an inferred scope, so the choice is visible and correctable.
 
+## Routing
+
+List the files in scope, then route them:
+
+- Skip lockfiles and generated, vendored, or binary files.
+- The `coding` skill's `laravel.md` applies only to PHP files and files that are obviously Laravel.
+
+Add the count of routed files by type to the opening line, for example: `report · branch (3 commits ahead of main) · 14 files: 9 PHP, 3 Blade, 1 test, 1 CLAUDE.md`.
+
 ## The audit (all modes)
 
-Run both skills over the resolved scope and collect their findings. Invoke each with the Skill tool when it appears in the available-skills list. A sub-skill marked user-invocable only will not, so locate its SKILL.md instead (installed as a plugin or symlinked into the skills directory) and follow its instructions over the same scope yourself. The two lenses yield findings differently: `polish` runs its own review and returns them, while `coding` is a style guide that returns nothing, so review the scope against its rules yourself and record each violation as a finding. Each skill owns its own review criteria. fgilio-review's job is to run both against the same scope and reconcile the output, not to second-guess either one. Have them return findings only. fgilio-review owns what happens next, so neither sub-review should modify code on its own.
+Run both skills over the routed files and collect their findings. Invoke each with the Skill tool when it appears in the available-skills list. A sub-skill marked user-invocable only will not, so locate its SKILL.md instead (installed as a plugin or symlinked into the skills directory) and follow its instructions over the same scope yourself. The two lenses yield findings differently: `polish` runs its own review and returns them, while `coding` is a style guide that returns nothing, so review the scope against its rules yourself and record each violation as a finding. Each skill owns its own review criteria. fgilio-review's job is to run both against the same scope and reconcile the output, not to second-guess either one. Have them return findings only. fgilio-review owns what happens next, so neither sub-review should modify code on its own.
 
 Merge the two sets into one deduplicated, prioritized list. Each finding names the file or symbol, the problem, and the concrete fix. Lead with the highest-leverage items. Where the two lenses disagree, say so and which way to lean.
 
