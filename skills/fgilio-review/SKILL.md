@@ -46,6 +46,8 @@ Run two reviews in parallel over the routed files. The main context spawns the s
 
 The rules subagent also checks a routed PR title and description against the `coding` skill's PR Descriptions section. It reports a finding only when they mislead a reviewer: they state the change wrongly, do not say why, describe a design that did not ship, or take much more than a minute to read. Wording and style are not findings.
 
+On a branch with an open PR, the way its commits are split or ordered is not a finding. To split them would rewrite history that reviewers already read, so the `coding` Landing Changes rules apply to the next change, not to this one.
+
 Load `coding` and `polish` from the same install as this skill: `coding:coding` and `polish:polish` for a plugin install, or the entries next to this skill's directory for a skills-directory install. A same-named copy under another namespace (such as `anthropic-skills:coding`) can be an older version, so never load it. Invoke a skill with the Skill tool when it appears in the available-skills list. A skill marked user-invocable only will not, so locate its SKILL.md instead, follow it, and give its path to any subagent that needs it. Each skill owns its own review criteria. fgilio-review's job is to run both against the same files and reconcile the output, not to second-guess either one. Tell the rules subagent and each `polish` persona to return findings only, in the format below. Personas also return their no-change verdicts on traced flows, so the merge can show where the lenses disagree. fgilio-review owns what happens next, so neither review should modify code on its own.
 
 Every finding uses one format, whichever lens produced it:
