@@ -76,7 +76,7 @@ Merge the findings into one list:
 
 ## Verify
 
-In every mode, give the merged list to a fresh subagent. For each finding, it reads the cited lines and the rule or persona lens behind it, then returns keep or drop with a one-line reason. It drops a finding when the lines do not show the problem, or when the fix would not solve it. A finding that depends on another one stays. Above 20 findings, split the list by file across several subagents. Report how many were dropped alongside the final list.
+In every mode, give the merged list and the defect notes to a fresh subagent. For each finding, it reads the cited lines and the rule or persona lens behind it, then returns keep or drop with a one-line reason. It drops a finding when the lines do not show the problem, or when the fix would not solve it, and a defect note when the lines do not show the defect. A finding that depends on another one stays. Above 20 findings, split the list by file across several subagents. Report how many were dropped alongside the final list.
 
 ## report (default)
 
