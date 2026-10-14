@@ -61,14 +61,14 @@ Every finding uses one format, whichever lens produced it:
 - **Problem**: one sentence on what costs clarity or makes the next change harder.
 - **Fix**: one sentence, or a committable suggestion.
 
-Bug hunting belongs to `/code-review`, so tell the rules subagent and each `polish` persona not to trace races, failure paths, or edge-case inputs. A defect (code that is wrong now: a bug or a broken contract) is never a finding here. A lens that notices one along the way returns it as one line: the location and what breaks. These lines are the defect notes. Every mode puts them after the findings, never as an inline comment or a fix.
+Correctness is out of scope. Tell the rules subagent and each `polish` persona not to trace races, failure paths, or edge-case inputs, and to report no bugs. The `coding` rules judge how the code reads and how it will change, so never file a bug under one of them.
 
 ## Merge
 
 Merge the findings into one list:
 
 - **Duplicates**: findings on the same file, with overlapping lines and the same problem, become one finding that lists every source.
-- **Defects**: a finding whose problem is code that is wrong now leaves the list and becomes a defect note, whatever class its source gave it. Duplicate notes become one.
+- **Bugs**: a finding whose problem is that the code is wrong now (it fails, races, or breaks a contract) is dropped, whatever class its source gave it. No output mentions it.
 - **Class**: when merged sources give different classes, keep the one that comes first in the order below.
 - **Dependencies**: when one fix makes another unnecessary or possible, say so on both findings.
 - **Order**: `design`, then `mechanical`. Within a class, an enabling fix comes before the fixes it unlocks, then the fix that removes the most code or concepts comes first.
@@ -76,11 +76,11 @@ Merge the findings into one list:
 
 ## Verify
 
-In every mode, give the merged list and the defect notes to a fresh subagent. For each finding, it reads the cited lines and the rule or persona lens behind it, then returns keep or drop with a one-line reason. It drops a finding when the lines do not show the problem, or when the fix would not solve it, and a defect note when the lines do not show the defect. A finding that depends on another one stays. Above 20 findings, split the list by file across several subagents. Report how many were dropped alongside the final list.
+In every mode, give the merged list to a fresh subagent. For each finding, it reads the cited lines and the rule or persona lens behind it, then returns keep or drop with a one-line reason. It drops a finding when the lines do not show the problem, or when the fix would not solve it. A finding that depends on another one stays. Above 20 findings, split the list by file across several subagents. Report how many were dropped alongside the final list.
 
 ## report (default)
 
-Present the merged list. Write no code. End with the prioritized findings, then the defect notes.
+Present the merged list. Write no code. End with the prioritized findings.
 
 ## address
 
@@ -91,15 +91,13 @@ Apply the fixes in this order, gated on class and behavior:
 3. Apply the `mechanical` findings with behavior `unchanged` directly.
 4. Run the repo's checks once (tests, linters, hooks). If a fix breaks them, revert that fix and report it.
 
-Report the defect notes after the fixes, for `/code-review` to take up.
-
-If there is no interactive user to confirm with (a scheduled routine, say), do not block and do not silently apply risky changes. Skip step 1, run steps 3 and 4, and leave each finding that needed confirmation as a comment on the current branch's PR (see `comment`), with the defect notes in its summary, so nothing is lost.
+If there is no interactive user to confirm with (a scheduled routine, say), do not block and do not silently apply risky changes. Skip step 1, run steps 3 and 4, and leave each finding that needed confirmation as a comment on the current branch's PR (see `comment`), so nothing is lost.
 
 ## comment
 
 Post the merged findings as review comments on the target PR. Write everything you post (inline comments, suggestions' prose, and the review summary) in the language of the PR's description, not necessarily English: read the description, detect its language (fall back to the PR title if the description is empty), and match it.
 
-1. Anchor each finding to its file and line in the PR diff. A PR description finding has no line, so it goes in the review summary. The defect notes close the summary.
+1. Anchor each finding to its file and line in the PR diff. A PR description finding has no line, so it goes in the review summary.
 2. Batch everything into a single PR review: start a pending review, add one inline comment per finding at the relevant line, then submit the review once with a brief summary. One notification for the whole audit, not one per finding. Include a committable suggestion only when it fixes the finding entirely. Otherwise describe the fix in prose.
 3. If the session's tooling can't build a pending review, fall back to individual inline comments. If inline comments aren't possible at all, consolidate everything into a single summary comment on the PR.
-4. One comment per unique finding, never a duplicate. If there are no findings, submit a single brief review that says so, followed by the defect notes if there are any.
+4. One comment per unique finding, never a duplicate. If there are no findings, submit a single brief review that says so.
