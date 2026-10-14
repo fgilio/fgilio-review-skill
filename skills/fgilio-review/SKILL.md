@@ -3,7 +3,8 @@ name: fgilio-review
 description: >
   Audit code through Franco's two review lenses (the `coding` and `polish`
   skills) merged into one prioritized list.
-  Use when: reviewing the current changes, a branch, or a PR in one pass.
+  Use when: reviewing the current changes, a branch, or a PR for style and
+  long-term maintenance in one pass.
 argument-hint: "[report|address|comment] [--scope=changes|branch|project] [<PR number or URL>]"
 user-invocable: true
 disable-model-invocation: true
@@ -11,7 +12,7 @@ disable-model-invocation: true
 
 # fgilio-review
 
-One audit, two lenses. Route the scope, review it in parallel against the `coding` rules and through the `polish` panel, merge the findings into a single prioritized list, verify each one, then act on it according to the chosen mode.
+One audit, two lenses. It judges style, naming, structure, ownership, and long-term maintenance. Route the scope, review it in parallel against the `coding` rules and through the `polish` panel, merge the findings into a single prioritized list, verify each one, then act on it according to the chosen mode.
 
 ## Parsing arguments
 
@@ -54,22 +55,23 @@ Every finding uses one format, whichever lens produced it:
 
 - **Location**: `file:line`, a line range, or `PR description`.
 - **Source**: the `coding` section or the `polish` persona behind it.
-- **Class**: `defect` (wrong now: a bug or a broken contract), `design` (structure, naming, or ownership, possibly across files), or `mechanical` (local, same behavior, one clear fix: cut a comment, use the framework idiom, split a guard).
+- **Class**: `design` (structure, naming, or ownership, possibly across files) or `mechanical` (local, same behavior, one clear fix: cut a comment, use the framework idiom, split a guard).
 - **Behavior**: `unchanged` or `changes`.
 - **Contracts**: when the fix touches an interface, the callers and external contracts it must keep working. Omit it otherwise.
-- **Problem**: one sentence on what breaks or costs clarity.
+- **Problem**: one sentence on what costs clarity or makes the next change harder.
 - **Fix**: one sentence, or a committable suggestion.
 
-Bug hunting belongs to `/code-review`. A defect either lens finds along the way still goes in the list.
+Correctness is out of scope. Tell the rules subagent and each `polish` persona not to trace races, failure paths, or edge-case inputs, and to report no bugs. The `coding` rules judge how the code reads and how it will change, so never file a bug under one of them.
 
 ## Merge
 
 Merge the findings into one list:
 
 - **Duplicates**: findings on the same file, with overlapping lines and the same problem, become one finding that lists every source.
+- **Bugs**: a finding whose problem is that the code is wrong now (it fails, races, or breaks a contract) is dropped, whatever class its source gave it. No output mentions it.
 - **Class**: when merged sources give different classes, keep the one that comes first in the order below.
 - **Dependencies**: when one fix makes another unnecessary or possible, say so on both findings.
-- **Order**: `defect`, then `design`, then `mechanical`. Within a class, an enabling fix comes before the fixes it unlocks, then the fix that removes the most code or concepts comes first.
+- **Order**: `design`, then `mechanical`. Within a class, an enabling fix comes before the fixes it unlocks, then the fix that removes the most code or concepts comes first.
 - **Disagreements**: where the lenses propose different fixes, or a persona's no-change verdict covers lines another source flagged, say so and which way to lean. No-change verdicts stay out of the list.
 
 ## Verify
@@ -98,4 +100,4 @@ Post the merged findings as review comments on the target PR. Write everything y
 1. Anchor each finding to its file and line in the PR diff. A PR description finding has no line, so it goes in the review summary.
 2. Batch everything into a single PR review: start a pending review, add one inline comment per finding at the relevant line, then submit the review once with a brief summary. One notification for the whole audit, not one per finding. Include a committable suggestion only when it fixes the finding entirely. Otherwise describe the fix in prose.
 3. If the session's tooling can't build a pending review, fall back to individual inline comments. If inline comments aren't possible at all, consolidate everything into a single summary comment on the PR.
-4. One comment per unique finding, never a duplicate. If there are no findings, submit a single brief "no issues found" review.
+4. One comment per unique finding, never a duplicate. If there are no findings, submit a single brief review that says so.
