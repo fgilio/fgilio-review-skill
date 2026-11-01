@@ -16,7 +16,7 @@ One skill, three modes, selected by the first argument:
 
 Optionally scope the review (without `--scope` it is inferred from context: uncommitted changes, the branch, or the whole project when the request covers it or there is no diff):
 
-```
+```text
 /fgilio-review --scope=changes
 /fgilio-review address --scope=branch
 /fgilio-review comment 65           # target a specific PR
@@ -34,7 +34,7 @@ The `coding` and `polish` skills must be available in the session, since this sk
 
 Installs through the [fgilio marketplace](https://github.com/fgilio/claude-plugins) and receives updates as the skill evolves. The manifest declares `coding` and `polish` as [plugin dependencies](https://code.claude.com/docs/en/plugin-dependencies), so the install pulls them in:
 
-```
+```text
 /plugin marketplace add fgilio/claude-plugins
 /plugin install fgilio-review@fgilio
 ```
@@ -51,6 +51,15 @@ ln -s ~/dev/skills/fgilio-review-skill/skills/fgilio-review ~/.claude/skills/fgi
 ```
 
 This path also works with any agent that supports the open [Agent Skills](https://agentskills.io) format. Updates require a manual `git pull`.
+
+## Development
+
+```bash
+bun install
+bun run check
+```
+
+`bun install` installs the pinned tools from `bun.lock` and the pre-commit hook, which formats and lints the staged Markdown, JSON and YAML. `bun run check` runs the format and Markdown gates. CI also runs the prose and plugin checks. [fleet/README.md](https://github.com/fgilio/claude-plugins/blob/main/fleet/README.md) in the marketplace repository describes the standard and the shared workflow that checks it.
 
 ## License
 
