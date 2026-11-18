@@ -22,6 +22,7 @@ KEEP: `rejectInvalidOrders()` only logs the invalid orders, so a caller reading 
 KEEP: "Paid, or due in the future" is written by hand in three queries. (cost: one rule, three derivations)
 KEEP: Every other mailer takes the `User`, this one takes an email string (`WelcomeMail`, `InvoiceMail`). (cost: a convention, with the sites that hold it)
 KEEP: The comment above `sendInvoice()` narrates the next line. (rule: `coding` comment density)
+KEEP: `'invoice-totals'` is spelled in the controller that caches it and in the listener that forgets it. (rule: `coding` one shared name, one definition)
 KEEP: The test builds the `invoice.paid` audit row by hand, so a change to `InvoicePaid` leaves it green. (cost: the test proves its own copy)
 KEEP: The README lists the four payment providers and says "four" in two other places. (cost: a count kept by hand)
 CUT:  `$user->name ?? ''` could be `(string) $user->name`. (equivalent forms, no rule, no cost)
